@@ -433,17 +433,24 @@
                         <div class="col-12 col-md-6" wire:ignore.self>
                             <label class="form-label"> الحالة :</label>
                             <select class="form-select" wire:model='status_note'>
-                                @foreach (getOrderNoteStatuse() as $order_status)
-                                    @if (auth()->user()->user_type == 'marketer')
-                                        @if ($order_status->id != 3)
+                                @if ($order->assign_to && $order->assign_to == auth()->id() && auth()->user()->user_type == 'marketer')
+                                    @foreach (getOrderNoteStatuse() as $order_status)
+                                        @if (auth()->user()->user_type == 'marketer')
+                                            @if ($order_status->id != 3)
+                                                <option value="{{ $order_status->id }}">{{ $order_status->name }}
+                                                </option>
+                                            @endif
+                                        @else
                                             <option value="{{ $order_status->id }}">{{ $order_status->name }}
                                             </option>
                                         @endif
-                                    @else
+                                    @endforeach
+                                @else
+                                    @foreach (getOrderNoteStatuse() as $order_status)
                                         <option value="{{ $order_status->id }}">{{ $order_status->name }}
                                         </option>
-                                    @endif
-                                @endforeach
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
 
