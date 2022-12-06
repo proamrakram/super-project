@@ -239,7 +239,7 @@ class OrderService extends Controller
         ]);
 
         $user = auth()->user();
-        dd($data['assign_to'] && $order->assign_to != $data['assign_to']);
+        dd($data['assign_to'] && $order->assign_to != $data['assign_to'], $data['assign_to'],$order->assign_to );
 
         if ($data['assign_to'] && $order->assign_to != $data['assign_to']) {
 
