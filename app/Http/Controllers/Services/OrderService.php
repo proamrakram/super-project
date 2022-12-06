@@ -260,6 +260,7 @@ class OrderService extends Controller
             $note = "قام المدير $admin بتعديل الطلب";
         }
 
+
         if ($user->user_type == 'marketer') {
             $marketer_name = getUserName($user->id);
             $link_ma = route('panel.user', $user->id);
