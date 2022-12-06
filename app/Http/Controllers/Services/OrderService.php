@@ -240,9 +240,8 @@ class OrderService extends Controller
         ]);
 
         $user = auth()->user();
-        dd($data['assign_to'] && $order->assign_to != $data['assign_to'], $data['assign_to'], $order->assign_to, $old_assign_to);
 
-        if ($data['assign_to'] && $order->assign_to != $data['assign_to']) {
+        if ($data['assign_to'] && $old_assign_to != $data['assign_to']) {
 
             $assign_to_id = $data['assign_to'];
 
@@ -257,14 +256,11 @@ class OrderService extends Controller
             $marketer = "<a href='$link_ma'> $marketer_name</a>";
             $admin = "<a href='$link_admin'>$user->name</a>";
             $note = "تم إسناد الطلب للمسوق $marketer من المدير $admin";
+        } elseif ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
+            $link_admin =  route('panel.user', $user->id);
+            $admin = "<a href='$link_admin'>$user->name</a>";
+            $note = "قام المدير $admin بتعديل الطلب";
         }
-
-
-        // elseif ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
-        //     $link_admin =  route('panel.user', $user->id);
-        //     $admin = "<a href='$link_admin'>$user->name</a>";
-        //     $note = "قام المدير $admin بتعديل الطلب";
-        // }
 
 
         if ($user->user_type == 'marketer') {
