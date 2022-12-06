@@ -96,10 +96,6 @@
             window.livewire.emit('updateNotifications');
             window.livewire.emit('updateOrderMarketer');
             let id = "{{ auth()->user()->id }}";
-            console.log(data);
-            console.log(data.user);
-            console.log(data.user.id);
-            console.log(id);
 
             if (data.user) {
                 if (id == data.user.id) {
@@ -116,6 +112,11 @@
                 }
             }
 
+            let user_type = "{{ auth()->user()->user_type }}";
+
+            console.log(data);
+            console.log(data.order);
+            console.log(user_type);
 
             if (data.order) {
                 let user_type = "{{ auth()->user()->user_type }}";
