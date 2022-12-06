@@ -239,6 +239,7 @@ class OrderService extends Controller
         ]);
 
         $user = auth()->user();
+        dd($data['assign_to'] && $order->assign_to != $data['assign_to']);
 
         if ($data['assign_to'] && $order->assign_to != $data['assign_to']) {
 
@@ -279,7 +280,6 @@ class OrderService extends Controller
             'action' => 'edit',
         ]);
 
-        dd($data['assign_to'] && $order->assign_to != $data['assign_to']);
 
         return Order::find($order->id);
     }
