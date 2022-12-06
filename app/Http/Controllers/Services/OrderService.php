@@ -100,6 +100,10 @@ class OrderService extends Controller
                 $marketer = "<a href='$link_ma'> $marketer_name</a>";
                 $admin = "<a href='$link_admin'>$user->name</a>";
                 $note = "تم إسناد الطلب للمسوق $marketer من المدير $admin";
+            } else {
+                $link_admin =  route('panel.user', $user->id);
+                $admin = "<a href='$link_admin'>$user->name</a>";
+                $note = "قام المدير $admin بإضافة الطلب";
             }
         }
 
