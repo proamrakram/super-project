@@ -103,7 +103,7 @@
 
             if (data.user) {
                 if (id == data.user.id) {
-                    // let audio = document.querySelector("audio");
+
                     let audio = new Audio("{{ asset('assets/sound.wav') }}");
 
                     audio.play().catch(e => {
@@ -115,6 +115,23 @@
                     });
                 }
             }
+
+
+            if (data.order) {
+                let user_type = "{{ auth()->user()->user_type }}";
+                if (user_type == 'admin' || user_type == 'superadmin') {
+                    let audio = new Audio("{{ asset('assets/sound.wav') }}");
+
+                    audio.play().catch(e => {
+                        window.addEventListener('click', () => {
+                            audio.play()
+                        }, {
+                            once: true
+                        })
+                    });
+                }
+            }
+
 
         });
     </script>
