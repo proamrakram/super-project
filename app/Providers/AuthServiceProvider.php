@@ -31,26 +31,26 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // $columns = DB::getSchemaBuilder()->getColumnListing('permissions');
-        // $permissions = 0;
+        $columns = DB::getSchemaBuilder()->getColumnListing('permissions');
+        $permissions = 0;
 
-        // foreach ($columns as $column) {
+        foreach ($columns as $column) {
 
-        //     Gate::define($column, function (User $user) use ($column, $permissions) {
+            Gate::define($column, function (User $user) use ($column, $permissions) {
 
-        //         if (!$permissions) {
-        //             $permissions =  $user->permissions->getPermissions($user->id)->first()->toArray();
-        //         }
+                if (!$permissions) {
+                    $permissions =  $user->permissions->getPermissions($user->id)->first()->toArray();
+                }
 
-        //         foreach ($permissions as $name => $value) {
-        //             if ($name == $column) {
-        //                 if ($value != 2) {
-        //                     return true;
-        //                 }
-        //                 return false;
-        //             }
-        //         }
-        //     });
-        // }
+                foreach ($permissions as $name => $value) {
+                    if ($name == $column) {
+                        if ($value != 2) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            });
+        }
     }
 }
