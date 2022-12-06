@@ -23,6 +23,9 @@ class SmsService extends Controller
 
     public function send($user)
     {
+        $search = ['0'];
+        $replace = ['966'];
+        $this->numbers = str_replace($search, $replace, $user->phone);
         $data =  array(
             'userName' => $this->userName,
             'userPassword' => $this->userPassword,
