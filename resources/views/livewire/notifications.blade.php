@@ -114,10 +114,6 @@
 
             let user_type = "{{ auth()->user()->user_type }}";
 
-            console.log(data);
-            console.log(data.order);
-            console.log(user_type);
-
             if (data.order) {
                 let user_type = "{{ auth()->user()->user_type }}";
                 if (user_type == 'admin' || user_type == 'superadmin') {

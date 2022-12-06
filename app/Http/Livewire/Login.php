@@ -211,7 +211,7 @@ class Login extends Component
                 'can_recieve_sms' => 0
             ]);
 
-            // $result = $smsService->send($this->user);
+            $result = $smsService->send($this->user);
 
             $this->alert('warning', '', [
                 'toast' => true,
