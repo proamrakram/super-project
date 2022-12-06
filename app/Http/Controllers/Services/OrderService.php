@@ -159,7 +159,7 @@ class OrderService extends Controller
             'notes' => $data['notes'],
 
             'customer_id' => $customer->id,
-            'user_id' => $data['assign_to'],
+            'user_id' => 1,
             'who_add' => $customer->id,
             'assign_to_date' => $data['assign_to'] ? now() : null,
 
@@ -199,6 +199,7 @@ class OrderService extends Controller
     public function update($order, $data)
     {
         $old_assign_to = $order->assign_to;
+
         $order->update([
             'customer_name' => $order->customer_name,
             'customer_phone' => $order->customer_phone,
