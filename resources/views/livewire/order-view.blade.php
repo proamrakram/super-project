@@ -21,22 +21,31 @@
 
                                         @if ($order->order_status_id == 3)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-danger waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-danger waves-effect waves-float waves-light">
+                                                    <span>
                                                         الطلب مغلق
                                                     </span>
                                                 </a>
                                             </div>
+
+                                            @if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'superadmin')
+                                                <div class="mb-2" wire:click='activateOrder'>
+                                                    <a
+                                                        class="btn bg-light-success waves-effect waves-float waves-light">
+                                                        <span>
+                                                            تنشيط الطلب
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            @endif
                                         @endif
 
 
 
                                         @if ($order->order_status_id == 1)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-warning waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-warning waves-effect waves-float waves-light">
+                                                    <span>
                                                         الطلب جديد
                                                     </span>
                                                 </a>
@@ -47,9 +56,8 @@
 
                                         @if ($order->order_status_id == 2)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-success waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-success waves-effect waves-float waves-light">
+                                                    <span>
                                                         تم ربط الطلب بالعرض
                                                     </span>
                                                 </a>
@@ -58,9 +66,8 @@
 
                                         @if ($order->order_status_id == 4)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-success waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-success waves-effect waves-float waves-light">
+                                                    <span>
                                                         جاري متابعة الطلب
                                                     </span>
                                                 </a>
@@ -70,9 +77,8 @@
 
                                         @if ($order->order_status_id == 5)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-danger waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-danger waves-effect waves-float waves-light">
+                                                    <span>
                                                         لم يتم متابعة الطلب
                                                     </span>
                                                 </a>
@@ -81,21 +87,29 @@
 
                                         @if ($order->order_status_id == 6)
                                             <div class="mb-2">
-                                                <a class="btn bg-light-warning waves-effect waves-float waves-light"
-                                                    wire:ignore.self>
-                                                    <span wire:ignore>
+                                                <a class="btn bg-light-warning waves-effect waves-float waves-light">
+                                                    <span>
                                                         الطلب معلق
                                                     </span>
                                                 </a>
                                             </div>
+
+                                            @if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'superadmin')
+                                                <div class="mb-2" wire:click='closeOrder'>
+                                                    <a class="btn bg-light-danger waves-effect waves-float waves-light">
+                                                        <span>
+                                                            اغلاق الطلب
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            @endif
                                         @endif
 
 
                                         @if (!($order->order_status_id == 3) && !($order->order_status_id == 6))
                                             <a class="btn bg-light-success waves-effect waves-float waves-light"
-                                                data-bs-target="#connectToOffer" data-bs-toggle="modal"
-                                                wire:ignore.self>
-                                                <span wire:ignore>
+                                                data-bs-target="#connectToOffer" data-bs-toggle="modal">
+                                                <span>
                                                     <i data-feather='plus-square'></i>
                                                     ربط بالعرض
                                                 </span>
@@ -457,6 +471,9 @@
                         <div class="col-12" wire:ignore.self>
                             <label class="form-label" for="modalEditUserEmail">ملاحظات:</label>
                             <textarea class="form-control" id="notes" wire:model='text' rows="3" placeholder="ملاحظات"></textarea>
+                            @error('text')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="col-12 text-center mt-2 pt-50" wire:ignore.self>

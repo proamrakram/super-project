@@ -159,7 +159,7 @@ class OrderService extends Controller
             'notes' => $data['notes'],
 
             'customer_id' => $customer->id,
-            'user_id' => 1,
+            'user_id' => null,
             'who_add' => $customer->id,
             'assign_to_date' => $data['assign_to'] ? now() : null,
 

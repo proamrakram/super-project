@@ -5,7 +5,14 @@
 
         <p class="card-text mb-2">إنضم معنا الآن </p>
 
-        @if (!$user)
+
+        @if ($done)
+            <div class="auth-register-form mt-2">
+                <a class="btn btn-success w-100" tabindex="5" href="{{ route('login') }}">تسجيل الدخول</a>
+            </div>
+        @endif
+
+        @if (!$user && !$done)
             <form class="auth-register-form mt-2" wire:submit.prevent='submit' wire:ignore.self>
                 @csrf
 
@@ -60,7 +67,6 @@
 
             </form>
         @endif
-
 
         @if ($user)
             @if ($user->verification_code)

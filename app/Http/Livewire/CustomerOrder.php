@@ -12,6 +12,8 @@ use Livewire\Component;
 class CustomerOrder extends Component
 {
     use LivewireAlert;
+    protected $listeners = ['refreshComponent' => '$refresh'];
+
     public $first = 'active';
     public $second = '';
     public $third = '';
@@ -176,9 +178,9 @@ class CustomerOrder extends Component
             $this->sendNotification($order);
         }
 
-        $this->reset();
         $this->emit('updateOrders');
         $this->emit('updateOrderMarketer');
+        $this->emit('refreshComponent');
     }
 
     public function sendNotification($order)

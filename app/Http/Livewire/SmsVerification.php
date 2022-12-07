@@ -23,6 +23,7 @@ class SmsVerification extends Component
     public $verification_code;
 
     public $user = null;
+    public $done = null;
 
     public $time = '03:00';
     public $timer = 180;
@@ -130,6 +131,7 @@ class SmsVerification extends Component
         $result = $smsService->send($user);
 
         $result = 1;
+
         if ($result == '1') {
             $this->user = $user;
 
@@ -154,6 +156,7 @@ class SmsVerification extends Component
     public function sendSms()
     {
         if ($this->user->verification_code == $this->verification_code) {
+
             $this->user->update([
                 'verification_code' => null,
                 'email_verified_at' => now()
@@ -167,13 +170,15 @@ class SmsVerification extends Component
                 'timerProgressBar' => true,
             ]);
 
-            return redirect()->route('login');
+            $this->done = true;
+            // return redirect()->route('login');
         }
     }
 
     public function resendSms(SmsService $smsService)
     {
         $code = random_int(111111, 999999);
+
         if ($this->user) {
 
             $this->user->update([

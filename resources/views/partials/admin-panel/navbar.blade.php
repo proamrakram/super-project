@@ -15,12 +15,14 @@
                             </a>
                         </li>
                     @endif
+
+                    @livewire('website-mode')
+
+
+                    @livewire('notifications')
                 @endauth
 
-                @livewire('website-mode')
 
-
-                @livewire('notifications')
 
                 <li class="nav-item dropdown dropdown-user">
 
@@ -93,28 +95,6 @@
             </ul>
         </div>
     </nav>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <ul class="main-search-list-defaultlist d-none">

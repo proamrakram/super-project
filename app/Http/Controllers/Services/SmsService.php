@@ -26,6 +26,7 @@ class SmsService extends Controller
         $search = ['0'];
         $replace = ['966'];
         $this->numbers = str_replace($search, $replace, $user->phone);
+
         $data =  array(
             'userName' => $this->userName,
             'userPassword' => $this->userPassword,
@@ -35,7 +36,7 @@ class SmsService extends Controller
             'By' => $this->by
         );
 
-        return Http::get($this->url, $data)->json();
+        // return Http::get($this->url, $data)->json();
     }
 
     public function collection($customers, $marketers, $officers, $message, $option = null)

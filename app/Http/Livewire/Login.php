@@ -18,9 +18,12 @@ class Login extends Component
     public $method;
 
     public $user;
+    public $user_login;
+    public $password_message = false;
 
     public $time = '03:00';
     public $timer = 180;
+    public $max_len = 50;
 
     public $verification_code;
 
@@ -45,66 +48,65 @@ class Login extends Component
         return view('livewire.login');
     }
 
+    public function loginByPhone($user)
+    {
+        if ($user && !$user->email_verified_at) {
+            $user->update(['can_recieve_sms' => 1]);
+            $this->user = User::where('phone', $this->login_phone_email)->first();
+            $this->alert('warning', '', [
+                'toast' => true,
+                'position' => 'center',
+                'timer' => 6000,
+                'text' => '👍 يرجى إدخال كود التحقق قبل تسجيل الدخول',
+                'timerProgressBar' => true,
+            ]);
+            return false;
+        }
+
+        if ($user && Hash::check($this->login_password, $user->password)) {
+            Auth::login($user);
+            return redirect()->intended('panel/home');
+        } else {
+            $this->password_message = true;
+        }
+    }
+
+    public function loginByEmail($user)
+    {
+        if ($user && !$user->email_verified_at) {
+
+            $user->update(['can_recieve_sms' => 1]);
+            $this->user = User::where('phone', $this->login_phone_email)->first();
+            $this->alert('warning', '', [
+                'toast' => true,
+                'position' => 'center',
+                'timer' => 6000,
+                'text' => '👍 يرجى التحقق من رقم الهاتف قبل تسجيل الدخول',
+                'timerProgressBar' => true,
+            ]);
+            return false;
+        }
+
+        if ($user && Hash::check($this->login_password, $user->password)) {
+            Auth::login($user);
+            return redirect()->intended('panel/home');
+        } else {
+            $this->password_message = true;
+        }
+    }
 
     public function login()
     {
-        $validatedData = $this->validate();
-
+        $this->validate();
         $this->username();
-
         if ($this->method == 'phone') {
             $user = User::where('phone', $this->login_phone_email)->first();
+            $this->loginByPhone($user);
+        }
 
-            if ($user) {
-                if (!$user->email_verified_at) {
-                    $user->update(['can_recieve_sms' => 1]);
-                    $this->user = User::where('phone', $this->login_phone_email)->first();
-                    $this->alert('warning', '', [
-                        'toast' => true,
-                        'position' => 'center',
-                        'timer' => 6000,
-                        'text' => '👍 يرجى التحقق من رقم الهاتف قبل تسجيل الدخول',
-                        'timerProgressBar' => true,
-                    ]);
-                    return false;
-                }
-            }
-
-            $this->user = $user;
-
-            if ($this->user && Hash::check($this->login_password, $this->user->password)) {
-                Auth::login($this->user);
-                return redirect()->intended('panel/home');
-            }
-        } elseif ($this->method == 'email') {
-
+        if ($this->method == 'email') {
             $user = User::where('email', $this->login_phone_email)->first();
-
-            if ($user) {
-                if (!$user->email_verified_at) {
-                    $user->update(['can_recieve_sms' => 1]);
-                    $this->user = User::where('phone', $this->login_phone_email)->first();
-                    $this->alert('warning', '', [
-                        'toast' => true,
-                        'position' => 'center',
-                        'timer' => 6000,
-                        'text' => '👍 يرجى التحقق من رقم الهاتف قبل تسجيل الدخول',
-                        'timerProgressBar' => true,
-                    ]);
-                    return false;
-                }
-            }
-
-            $this->user = $user;
-
-            if ($this->user && Hash::check($this->login_password, $this->user->password)) {
-                Auth::login($this->user);
-                return redirect()->intended('panel/home');
-            }
-        } else {
-            return back()->withErrors([
-                'login_phone_email' => 'البيانات المتوفر  غير متطابقة',
-            ])->onlyInput('login_phone_email');
+            $this->loginByEmail($user);
         }
     }
 
@@ -160,6 +162,13 @@ class Login extends Component
 
     public function updated($propertyName)
     {
+        $_05 =  mb_substr($this->login_phone_email, 0, 2);
+        if ($_05 == '05') {
+            $this->max_len = 10;
+        } else {
+            $this->max_len = 50;
+        }
+
         $this->validateOnly($propertyName);
     }
 
@@ -179,13 +188,13 @@ class Login extends Component
         return 'email';
     }
 
-
-    public function sendSms()
+    public function verifiy()
     {
         if ($this->user->verification_code == $this->verification_code) {
             $this->user->update([
                 'verification_code' => null,
-                'email_verified_at' => now()
+                'email_verified_at' => now(),
+                'can_recieve_sms' => 0
             ]);
 
             $this->alert('success', '', [
@@ -196,7 +205,8 @@ class Login extends Component
                 'timerProgressBar' => true,
             ]);
 
-            return redirect()->route('login');
+            $this->user = null;
+            $this->verification_code = null;
         }
     }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('order_code')->unique()->nullable();
             $table->foreignId('order_status_id')->constrained('order_statuses')->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->integer('offer_id')->nullable();
 
             $table->string('customer_name')->nullable();

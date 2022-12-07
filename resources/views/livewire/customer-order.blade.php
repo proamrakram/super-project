@@ -49,7 +49,8 @@
                             $errors->has('avaliable_amount')) bg-danger @endif">2</span>
 
                     <span class="bs-stepper-label">
-                        <span class="bs-stepper-title
+                        <span
+                            class="bs-stepper-title
 
                             @if ($errors->has('property_type_id') ||
                                 $errors->has('city_id') ||
@@ -421,10 +422,10 @@
                     <div class="d-flex justify-content-between mt-2">
                         <button class="btn btn-primary btn-prev" wire:click="sequencing('second')">
                             <i data-feather="arrow-left" class="align-middle me-sm-25 me-0"></i>
-                            <span class="align-middle d-sm-inline-block d-none">السابق</span>
+                            <span class="align-middle d-sm-inline-block d-none" wire:ignore.self>السابق</span>
                         </button>
                         <button wire:click='store' class="btn btn-success btn-next" wire:click="save">
-                            <span class="align-middle d-sm-inline-block d-none">حفظ</span>
+                            <span class="align-middle d-sm-inline-block d-none" wire:ignore.self>حفظ</span>
                             <i data-feather="arrow-right" class="align-middle ms-sm-25 ms-0"></i>
                         </button>
                     </div>

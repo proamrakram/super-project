@@ -88,7 +88,6 @@
         });
 
         var channel = pusher.subscribe('new-order');
-        // window.Livewire.emit('notifyNewOrder', data);
 
         channel.bind('new-order', function(data) {
 
@@ -128,8 +127,6 @@
                     });
                 }
             }
-
-
         });
     </script>
 

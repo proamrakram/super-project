@@ -15,7 +15,8 @@ use Livewire\Component;
 class OrderView extends Component
 {
     use LivewireAlert;
-    protected $listeners = ['updateOrderNotesStatuses'];
+    protected $listeners = ['updateOrderNotesStatuses', 'refreshComponent' => '$refresh'];
+
     public $order;
     public $last_update_time = 'لم يتم التعديل على هذا الطلب بعد';
     public $last_update_note_time = 'لم يتم التعديل على هذا الطلب بعد';
@@ -50,9 +51,68 @@ class OrderView extends Component
         ]);
     }
 
+    protected function rules()
+    {
+        return [
+            #Form One
+            'text' => ['required'],
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            #Form One
+            'text.required' => 'هذا الحقل مطلوب',
+        ];
+    }
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function addNote()
     {
         $user = auth()->user();
+        $validatedData = $this->validate();
 
         OrderNote::create([
             'note' => $this->text,
@@ -69,14 +129,29 @@ class OrderView extends Component
             'timerProgressBar' => true,
         ]);
 
+
+        if (!in_array($this->status_note, [1, 2, 3, 4])) {
+            $this->order->update([
+                'who_edit' => auth()->id(),
+                'order_status_id' => 4
+            ]);
+        }
+
+
+
         if ($this->status_note == 3) {
 
             if ($user->user_type == 'marketer') {
-                $note = "قام المسوق $user->name بإغلاق الطلب";
+
+                $link_admin =  route('panel.user', $user->id);
+                $marketer = "<a href='$link_admin'>$user->name</a>";
+                $note = "قام المسوق $marketer بإغلاق الطلب";
             }
 
             if ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
-                $note = "قام المدير $user->name بإغلاق الطلب";
+                $link_admin =  route('panel.user', $user->id);
+                $admin = "<a href='$link_admin'>$user->name</a>";
+                $note = "قام المدير $admin بإغلاق الطلب";
             }
 
             $this->order->update([
@@ -101,7 +176,6 @@ class OrderView extends Component
             ]);
         }
 
-
         if ($this->status_note == 4) {
 
             $this->order->update([
@@ -110,11 +184,15 @@ class OrderView extends Component
             ]);
 
             if ($user->user_type == 'marketer') {
-                $note = "قام المسوق $user->name بتعليق الطلب";
+                $link_ma =  route('panel.user', $user->id);
+                $marketer = "<a href='$link_ma'>$user->name</a>";
+                $note = "قام المسوق $marketer بتعليق الطلب";
             }
 
             if ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
-                $note = "قام المدير $user->name بتعليق الطلب";
+                $link_admin =  route('panel.user', $user->id);
+                $admin = "<a href='$link_admin'>$user->name</a>";
+                $note = "قام المدير $admin بتعليق الطلب";
             }
 
             OrderEditor::create([
@@ -124,23 +202,71 @@ class OrderView extends Component
                 'action' => 'suspended',
             ]);
 
-            $this->alert('success', '', [
-                'toast' => true,
-                'position' => 'center',
-                'timer' => 6000,
-                'text' => '👍 تم إرسال إشعار بتعليق الطلب للإدارة بنجاح',
-                'timerProgressBar' => true,
-            ]);
-
             $order = Order::find($this->order_id);
 
-            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
-            Notification::send($admins, new SuspendedOrder($order));
-            event(new EventsSuspendedOrder($order));
+            if ($user->user_type == 'marketer') {
+                $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+                Notification::send($admins, new SuspendedOrder($order));
+                event(new EventsSuspendedOrder($order));
 
-            $this->refresh();
+                $this->alert('success', '', [
+                    'toast' => true,
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'text' => '👍 تم إرسال إشعار بتعليق الطلب للإدارة بنجاح',
+                    'timerProgressBar' => true,
+                ]);
+            } else {
+                $this->alert('success', '', [
+                    'toast' => true,
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'text' => '👍 تم تعليق الطلب بنجاح',
+                    'timerProgressBar' => true,
+                ]);
+            }
         }
+
+        $this->emit('refreshComponent');
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function getLastUpateTime()
     {
@@ -211,5 +337,76 @@ class OrderView extends Component
 
             return 'منذ ' . $secs . ' ثواني';
         }
+    }
+
+    public function activateOrder()
+    {
+        $order = $this->order;
+        $user = auth()->user();
+
+        if ($order) {
+            if ($order->order_status_id == 3) {
+                $order->update(['order_status_id' =>  5]);
+
+                if ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
+                    $link_admin =  route('panel.user', $user->id);
+                    $admin = "<a href='$link_admin'>$user->name</a>";
+                    $note = "قام المدير $admin بتنشيط الطلب";
+                }
+
+                OrderEditor::create([
+                    'order_id' => $order->id,
+                    'user_id' => $user->id,
+                    'note' => $note,
+                    'action' => 'active',
+                ]);
+            }
+
+            $this->alert('success', '', [
+                'toast' => true,
+                'position' => 'center',
+                'timer' => 3000,
+                'text' => '👍 تم تنشيط الطلب بنجاح',
+                'timerProgressBar' => true,
+            ]);
+        }
+
+        $this->emit('refreshComponent');
+    }
+
+    public function closeOrder()
+    {
+        $order = $this->order;
+        $user = auth()->user();
+
+        if ($order) {
+            if ($order->order_status_id == 6) {
+                $order->update(['order_status_id' =>  3]);
+
+                if ($user->user_type == 'admin' || $user->user_type == 'superadmin') {
+
+                    $link_admin =  route('panel.user', $user->id);
+                    $admin = "<a href='$link_admin'>$user->name</a>";
+                    $note = "قام المدير $admin بإغلاق الطلب";
+                }
+
+                OrderEditor::create([
+                    'order_id' => $order->id,
+                    'user_id' => $user->id,
+                    'note' => $note,
+                    'action' => 'active',
+                ]);
+            }
+
+            $this->alert('success', '', [
+                'toast' => true,
+                'position' => 'center',
+                'timer' => 3000,
+                'text' => '👍 تم إغلاق الطلب بنجاح',
+                'timerProgressBar' => true,
+            ]);
+        }
+
+        $this->emit('refreshComponent');
     }
 }

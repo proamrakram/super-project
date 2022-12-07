@@ -143,7 +143,7 @@
                                     <div class="row mb-1">
                                         <div class="col-md-12">
 
-                                            <label class="form-label" for="search">رقم الجوال / الهوية</label>
+                                            <label class="form-label" for="search"> البحث في رقم الجوال / الهوية</label>
                                             <span
                                                 class="select2-container select2-container--default select2-container--open">
 
