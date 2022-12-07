@@ -24,6 +24,7 @@ class UserController extends Controller
             'name' => $request->username,
             'phone' => $request->phone,
             'email' => $request->email,
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
         ]);
 
