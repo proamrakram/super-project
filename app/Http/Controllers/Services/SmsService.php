@@ -8,23 +8,32 @@ use App\Models\User;
 
 class SmsService extends Controller
 {
-    protected $url = "https://mobile.net.sa/sms/gw/";
-    protected $userName = '966553255011';
-    protected $userPassword = '258076';
+    protected $url = "";
+    protected $userName = '';
+    protected $userPassword = '';
     protected $numbers = '966597555447, 966597000855';
-    protected $userSender = 'Al_madar'; #Indvidual Al_madar #Collection Al_madar_AD
+    protected $userSender = ''; #Indvidual Al_madar #Collection Al_madar_AD
     protected $msg = 'اختبار نظام الرسائل الفورية';
-    protected $by = 'standard';
+    protected $by = '';
     protected $infos = 'YES';
     protected $YesRepeat = 1;
     protected $dateTimeSendLater = '2014-12-30--23:59:00';
     protected $xml = '';
 
+    public function __construct()
+    {
+        $this->url = env('SMS_URL');
+        $this->userName = env('SMS_USERNAME');
+        $this->userPassword = env('SMS_PASSWORD');
+        $this->userSender = env('SMS_USER_SENDER');
+        $this->by = env('SMS_BY');
+    }
+
     public function send($user)
     {
-        $search = ['0'];
-        $replace = ['966'];
-        $this->numbers = str_replace($search, $replace, $user->phone);
+        // $search = ['0'];
+        // $replace = ['966'];
+        // $this->numbers = str_replace($search, $replace, $user->phone);
 
         $data =  array(
             'userName' => $this->userName,
@@ -40,7 +49,7 @@ class SmsService extends Controller
 
     public function collection($customers, $marketers, $officers, $message, $option = null)
     {
-        $this->setNumbers($customers, $marketers, $officers);
+        // $this->setNumbers($customers, $marketers, $officers);
 
         $this->userSender = "Al_madar-AD";
 
