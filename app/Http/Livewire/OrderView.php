@@ -129,15 +129,12 @@ class OrderView extends Component
             'timerProgressBar' => true,
         ]);
 
-
-        if (!in_array($this->status_note, [1, 2, 3, 4])) {
+        if (!in_array($this->status_note, [1, 2, 3, 4]) || $this->status_note == 1) {
             $this->order->update([
                 'who_edit' => auth()->id(),
                 'order_status_id' => 4
             ]);
         }
-
-
 
         if ($this->status_note == 3) {
 
