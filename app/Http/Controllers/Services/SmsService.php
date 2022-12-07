@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Services;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\User;
-use Illuminate\Support\Facades\Http;
 
 class SmsService extends Controller
 {
@@ -36,7 +35,7 @@ class SmsService extends Controller
             'By' => $this->by
         );
 
-        return Http::get($this->url, $data)->json();
+        // return Http::get($this->url, $data)->json();
     }
 
     public function collection($customers, $marketers, $officers, $message, $option = null)
@@ -58,19 +57,19 @@ class SmsService extends Controller
             $dataPOST['YesRepeat'] = $this->YesRepeat;
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPOST);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        // curl_setopt($ch, CURLE_HTTP_NOT_FOUND, 1);
-        $FainalResult = curl_exec($ch);
-        curl_close($ch);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, $this->url);
+        // curl_setopt($ch, CURLOPT_HEADER, false);
+        // curl_setopt($ch, CURLOPT_POST, true);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPOST);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        // curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        // // curl_setopt($ch, CURLE_HTTP_NOT_FOUND, 1);
+        // $FainalResult = curl_exec($ch);
+        // curl_close($ch);
 
-        return $FainalResult;
+        // return $FainalResult;
     }
 
     public function sendInd($numbers, $message, $option = null)
@@ -100,19 +99,19 @@ class SmsService extends Controller
             $dataPOST['YesRepeat'] = $this->YesRepeat;
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPOST);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        // curl_setopt($ch, CURLE_HTTP_NOT_FOUND, 1);
-        $FainalResult = curl_exec($ch);
-        curl_close($ch);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, $this->url);
+        // curl_setopt($ch, CURLOPT_HEADER, false);
+        // curl_setopt($ch, CURLOPT_POST, true);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPOST);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        // curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        // // curl_setopt($ch, CURLE_HTTP_NOT_FOUND, 1);
+        // $FainalResult = curl_exec($ch);
+        // curl_close($ch);
 
-        return $FainalResult;
+        // return $FainalResult;
     }
 
 
