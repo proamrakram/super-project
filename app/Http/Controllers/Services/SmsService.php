@@ -49,7 +49,6 @@ class SmsService extends Controller
 
     public function collection($customers, $marketers, $officers, $message, $option = null)
     {
-        // $this->setNumbers($customers, $marketers, $officers);
 
         $this->userSender = "Al_madar-AD";
 
